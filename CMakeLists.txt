@@ -1,0 +1,16 @@
+cmake_minimum_required(VERSION 3.20)
+
+project(SFML-game LANGUAGES CXX)
+
+add_subdirectory(${CMAKE_SOURCE_DIR}/app)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+install(TARGETS ${PROJECT_NAME}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)
+
+set(BUILD_SHARED_LIBS FALSE)
+add_subdirectory(libs/sfml)
