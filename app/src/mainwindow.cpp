@@ -31,16 +31,19 @@ int MainWindow::runLoop()
             case sf::Event::Closed:
             {
                 close();
+                break;
             }
             case sf::Event::KeyPressed:
             {
                 KeyPressEvent e{ Keyboard::Key(event.key.code) };
                 handleEvent(&e);
+                break;
             }
             case sf::Event::KeyReleased:
             {
                 KeyReleaseEvent e{ Keyboard::Key(event.key.code) };
                 handleEvent(&e);
+                break;
             }
             default:
                 break;
@@ -48,7 +51,7 @@ int MainWindow::runLoop()
         }
 
         clear();
-        _scene->draw(this, &sf::RenderStates::Default);
+        _scene->render(this, &sf::RenderStates::Default);
         display();
     }
 

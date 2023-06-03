@@ -14,18 +14,21 @@ Scene::Scene(EventHandler *parent)
         parent->addEventHandler(this);
 }
 
-void Scene::draw(sf::RenderTarget *target, const sf::RenderStates *states)
+void Scene::render(sf::RenderTarget *target, const sf::RenderStates *states)
 {
     for (auto *item : _graphicsItems)
+    {
+        item->update();
         target->draw(item->drawableItem(), *states);
+    }
 }
 
-std::vector<const Item *> Scene::items() const
+std::vector<Item *> Scene::items() const
 {
     return _graphicsItems;
 }
 
-void Scene::addItem(const Item *item)
+void Scene::addItem(Item *item)
 {
     _graphicsItems.push_back(item);
 }

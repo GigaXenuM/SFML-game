@@ -18,5 +18,6 @@ public:
     virtual ~Item() = default;
 
     virtual const sf::Drawable &drawableItem() const = 0;
+    virtual void update() = 0;
 };
 } // namespace Scene

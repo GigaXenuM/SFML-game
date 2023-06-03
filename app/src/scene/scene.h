@@ -23,14 +23,14 @@ public:
 
     void addItem();
 
-    void draw(sf::RenderTarget *target, const sf::RenderStates *states);
+    void render(sf::RenderTarget *target, const sf::RenderStates *states);
 
-    std::vector<const Item *> items() const;
+    std::vector<Item *> items() const;
 
-    void addItem(const Item *item);
+    void addItem(Item *item);
 
 private:
-    std::vector<const Item *> _graphicsItems;
+    std::vector<Item *> _graphicsItems;
 };
 
 } // namespace Scene
