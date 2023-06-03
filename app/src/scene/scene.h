@@ -18,7 +18,7 @@ class Item;
 class Scene : public EventHandler
 {
 public:
-    Scene(EventHandler *parent);
+    explicit Scene(EventHandler *parent);
     virtual ~Scene() = default;
 
     void addItem();

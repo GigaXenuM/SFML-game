@@ -4,7 +4,10 @@
 
 class Event;
 class KeyPressEvent;
+class MousePressEvent;
+class MouseReleaseEvent;
 class KeyReleaseEvent;
+class MouseMoveEvent;
 
 class EventHandler
 {
@@ -20,6 +23,9 @@ public:
 
     virtual void keyPressEvent(KeyPressEvent *event);
     virtual void keyReleaseEvent(KeyReleaseEvent *event);
+    virtual void mousePressEvent(MousePressEvent *event);
+    virtual void mouseReleaseEvent(MouseReleaseEvent *event);
+    virtual void mouseMoveEvent(MouseMoveEvent *event);
 
 private:
     std::vector<EventHandler *> _handlers;

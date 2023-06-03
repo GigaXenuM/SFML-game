@@ -21,6 +21,18 @@ void Player::update()
     move();
 }
 
+void Player::setPos(PointF position)
+{
+    _drawableItem.setPosition({ position.x, position.y });
+}
+
+PointF Player::position() const
+{
+    auto sfmlPos{ _drawableItem.getPosition() };
+    float radius{ _drawableItem.getRadius() };
+    return { sfmlPos.x + radius, sfmlPos.y + radius };
+}
+
 void Player::keyPressEvent(KeyPressEvent *event)
 {
     _keyStates[static_cast<size_t>(event->key())] = true;

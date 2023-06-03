@@ -3,6 +3,9 @@
 #include "event.h"
 #include "event/keyevents/keypressevent.h"
 #include "event/keyevents/keyreleaseevent.h"
+#include "event/mouseevents/mousemoveevent.h"
+#include "event/mouseevents/mousepressevent.h"
+#include "event/mouseevents/mousereleaseevent.h"
 
 void EventHandler::handleEvent(Event *event)
 {
@@ -15,8 +18,14 @@ void EventHandler::handleEvent(Event *event)
         keyReleaseEvent(dynamic_cast<KeyReleaseEvent *>(event));
         break;
     case Event::EventType::MOUSE_MOVE:
+        mouseMoveEvent(dynamic_cast<MouseMoveEvent *>(event));
+        break;
     case Event::EventType::MOUSE_PRESS:
+        mousePressEvent(dynamic_cast<MousePressEvent *>(event));
+        break;
     case Event::EventType::MOUSE_RELEASE:
+        mouseReleaseEvent(dynamic_cast<MouseReleaseEvent *>(event));
+        break;
     case Event::EventType::MOUSE_SCROLL:
         break;
     }
@@ -47,6 +56,21 @@ void EventHandler::keyPressEvent(KeyPressEvent * /*event*/)
 }
 
 void EventHandler::keyReleaseEvent(KeyReleaseEvent * /*event*/)
+{
+    // Override it to define the logic.
+}
+
+void EventHandler::mousePressEvent(MousePressEvent * /*event*/)
+{
+    // Override it to define the logic.
+}
+
+void EventHandler::mouseReleaseEvent(MouseReleaseEvent *event)
+{
+    // Override it to define the logic.
+}
+
+void EventHandler::mouseMoveEvent(MouseMoveEvent *event)
 {
     // Override it to define the logic.
 }

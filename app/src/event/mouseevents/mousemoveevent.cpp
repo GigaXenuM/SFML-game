@@ -1,15 +1,15 @@
 #include "mousemoveevent.h"
 
-MouseMoveEvent::MouseMoveEvent(double x, double y) : _x{ x }, _y{ y }
+MouseMoveEvent::MouseMoveEvent(PointF pos, PointF lastPos) : _pos{ pos }, _lastPos{ lastPos }
 {
 }
 
-double MouseMoveEvent::x() const
+PointF MouseMoveEvent::pos() const
 {
-    return _x;
+    return _pos;
 }
 
-double MouseMoveEvent::y() const
+PointF MouseMoveEvent::lastPos() const
 {
-    return _y;
+    return _lastPos;
 }

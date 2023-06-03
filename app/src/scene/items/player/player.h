@@ -3,6 +3,7 @@
 #include "scene/items/item.h"
 
 #include "event/keyevents/keyboard.h"
+#include "geometry/point.h"
 
 #include <SFML/Graphics/CircleShape.hpp>
 
@@ -16,12 +17,15 @@ namespace Scene
 class Player : public Item
 {
 public:
-    Player(EventHandler *parent);
+    explicit Player(EventHandler *parent);
     virtual ~Player() = default;
 
     const sf::Drawable &drawableItem() const override;
 
     void update() override;
+
+    void setPos(PointF position) override;
+    PointF position() const;
 
 protected:
     void keyPressEvent(KeyPressEvent *event) override;
