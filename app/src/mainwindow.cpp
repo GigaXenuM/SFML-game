@@ -19,13 +19,14 @@ MainWindow::MainWindow(unsigned int width, unsigned int height, const char *name
       _scene{ new Scene::Scene(this) },
       _player{ new Scene::Player{ _scene } },
       _view{ new View{
-          RectF{ _player->position(), { static_cast<float>(width), static_cast<float>(height) } },
+          RectF{ _player->center(), { static_cast<float>(width), static_cast<float>(height) } },
           this } },
       _lastMouseMoveEvent{ { static_cast<float>(sf::Mouse::getPosition().x),
                              static_cast<float>(sf::Mouse::getPosition().y) },
                            {} }
 {
     _scene->addItem(_player);
+    _scene->addToCollisionDetection(_player);
 
     Scene::TestItem *item1{ new Scene::TestItem };
     Scene::TestItem *item2{ new Scene::TestItem };

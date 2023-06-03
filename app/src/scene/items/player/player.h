@@ -1,5 +1,6 @@
 #pragma once
 
+#include "scene/items/collisionitem.h"
 #include "scene/items/item.h"
 
 #include "event/keyevents/keyboard.h"
@@ -14,18 +15,21 @@ class EventHandler;
 namespace Scene
 {
 
-class Player : public Item
+class Player : public CollisionItem
 {
 public:
     explicit Player(EventHandler *parent);
     virtual ~Player() = default;
 
     const sf::Drawable &drawableItem() const override;
+    std::optional<RectF> intersects(const Item &item) const override;
+    RectF globalRect() const override;
+    PointF center() const override;
 
     void update() override;
-
     void setPos(PointF position) override;
-    PointF position() const;
+
+    void handleCollision(RectF collisionRect) override;
 
 protected:
     void keyPressEvent(KeyPressEvent *event) override;

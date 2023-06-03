@@ -12,6 +12,9 @@ public:
     TestItem();
 
     const sf::Drawable &drawableItem() const override;
+    std::optional<RectF> intersects(const Item &item) const override;
+    RectF globalRect() const override;
+    PointF center() const override;
 
     void setPos(PointF position) override;
 

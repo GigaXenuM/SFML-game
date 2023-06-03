@@ -21,6 +21,7 @@ public:
     void addEventHandler(EventHandler *handler);
     void removeEventHandler(EventHandler *handler);
 
+protected:
     virtual void keyPressEvent(KeyPressEvent *event);
     virtual void keyReleaseEvent(KeyReleaseEvent *event);
     virtual void mousePressEvent(MousePressEvent *event);

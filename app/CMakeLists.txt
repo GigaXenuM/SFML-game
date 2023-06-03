@@ -23,6 +23,7 @@ set(HEADER_FILES
     src/geometry/point.h
     src/geometry/rect.h
     src/geometry/size.h
+    src/geometry/utils.h
 )
 
 set(SOURCE_FILES
@@ -35,6 +36,7 @@ set(SOURCE_FILES
     src/scene/scene.cpp
     src/scene/items/player/player.cpp
     src/scene/items/testitem.cpp
+    src/scene/items/collisionitem.h
 
     src/event/eventhandler.cpp
     src/event/keyevents/keypressevent.cpp
@@ -42,6 +44,8 @@ set(SOURCE_FILES
     src/event/mouseevents/mousepressevent.cpp
     src/event/mouseevents/mousemoveevent.cpp
     src/event/mouseevents/mousereleaseevent.cpp
+
+    src/geometry/utils.cpp
 )
 
 include_directories(

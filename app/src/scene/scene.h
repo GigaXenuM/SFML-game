@@ -14,6 +14,7 @@ class RenderStates;
 namespace Scene
 {
 class Item;
+class CollisionItem;
 
 class Scene : public EventHandler
 {
@@ -29,8 +30,13 @@ public:
 
     void addItem(Item *item);
 
+    void addToCollisionDetection(CollisionItem *item);
+
 private:
+    void detectCollision();
+
     std::vector<Item *> _graphicsItems;
+    std::vector<CollisionItem *> _collisinDetectables;
 };
 
 } // namespace Scene
