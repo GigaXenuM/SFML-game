@@ -12,5 +12,7 @@ install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
 
+file(COPY ${CMAKE_SOURCE_DIR}/app/res/ DESTINATION ${CMAKE_BINARY_DIR}/app/res/)
+
 set(BUILD_SHARED_LIBS FALSE)
 add_subdirectory(libs/sfml)

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "SFML/Graphics/Color.hpp"
 #include "event/eventhandler.h"
 
 #include "geometry/point.h"
@@ -24,9 +23,11 @@ public:
     virtual ~Item() = default;
 
     virtual const sf::Drawable &drawableItem() const = 0;
-    virtual std::optional<RectF> intersects(const Item &item) const = 0;
     virtual RectF globalRect() const = 0;
+    virtual RectF collisionRect() const = 0;
     virtual PointF center() const = 0;
+
+    virtual std::optional<RectF> intersects(const Item &item) const;
 
     virtual void update(){};
     virtual void setPos(PointF position) = 0;

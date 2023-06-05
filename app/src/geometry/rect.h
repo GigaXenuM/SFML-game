@@ -26,3 +26,4 @@ template <typename T> struct Rect
 };
 
 using RectF = Rect<float>;
+using RectI = Rect<int>;

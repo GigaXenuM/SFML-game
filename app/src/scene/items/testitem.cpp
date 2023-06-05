@@ -14,20 +14,14 @@ const sf::Drawable &TestItem::drawableItem() const
     return _drawableItem;
 }
 
-std::optional<RectF> TestItem::intersects(const Item &item) const
-{
-    std::optional<sf::FloatRect> sfmlRect{ _drawableItem.getGlobalBounds().findIntersection(
-        Geometry::toSfmlRectF(globalRect())) };
-
-    if (sfmlRect.has_value())
-        return Geometry::toRectF(sfmlRect.value());
-
-    return std::nullopt;
-}
-
 RectF TestItem::globalRect() const
 {
-    return Geometry::toRectF(_drawableItem.getGlobalBounds());
+    return Geometry::toRect(_drawableItem.getGlobalBounds());
+}
+
+RectF TestItem::collisionRect() const
+{
+    return globalRect();
 }
 
 PointF TestItem::center() const

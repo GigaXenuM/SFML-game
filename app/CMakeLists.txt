@@ -9,6 +9,9 @@ set(HEADER_FILES
     src/scene/items/player/player.h
     src/scene/items/item.h
     src/scene/items/testitem.h
+    src/scene/items/collisionitem.h
+    src/scene/animation/animation.h
+    src/scene/textures/textures.h
 
     src/event/event.h
     src/event/eventhandler.h
@@ -34,9 +37,11 @@ set(SOURCE_FILES
     src/view/view.cpp
 
     src/scene/scene.cpp
+    src/scene/items/item.cpp
     src/scene/items/player/player.cpp
     src/scene/items/testitem.cpp
-    src/scene/items/collisionitem.h
+    src/scene/animation/animation.cpp
+    src/scene/textures/textures.cpp
 
     src/event/eventhandler.cpp
     src/event/keyevents/keypressevent.cpp

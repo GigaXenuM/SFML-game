@@ -3,6 +3,7 @@
 #include "scene/items/player/player.h"
 #include "scene/items/testitem.h"
 #include "scene/scene.h"
+#include "scene/textures/textures.h"
 
 #include "event/keyevents/keypressevent.h"
 #include "event/keyevents/keyreleaseevent.h"
@@ -14,10 +15,12 @@
 
 #include <SFML/Graphics/Drawable.hpp>
 
+std::shared_ptr<sf::Texture> playerTexture{ std::make_shared<sf::Texture>() };
+
 MainWindow::MainWindow(unsigned int width, unsigned int height, const char *name)
     : sf::RenderWindow{ sf::VideoMode({ width, height }), name },
       _scene{ new Scene::Scene(this) },
-      _player{ new Scene::Player{ _scene } },
+      _player{ new Scene::Player{ std::make_shared<sf::Texture>(Scene::playerTexture()), _scene } },
       _view{ new View{
           RectF{ _player->center(), { static_cast<float>(width), static_cast<float>(height) } },
           this } },
@@ -25,20 +28,23 @@ MainWindow::MainWindow(unsigned int width, unsigned int height, const char *name
                              static_cast<float>(sf::Mouse::getPosition().y) },
                            {} }
 {
-    _scene->addItem(_player);
-    _scene->addToCollisionDetection(_player);
-
     Scene::TestItem *item1{ new Scene::TestItem };
     Scene::TestItem *item2{ new Scene::TestItem };
     Scene::TestItem *item3{ new Scene::TestItem };
+    Scene::TestItem *item4{ new Scene::TestItem };
 
     item1->setPos({ -20, 300 });
     item2->setPos({ 35, -70 });
     item3->setPos({ 400, 320 });
+    item4->setPos({ 400, 400 });
 
     _scene->addItem(item1);
     _scene->addItem(item2);
     _scene->addItem(item3);
+    _scene->addItem(item4);
+
+    _scene->addItem(_player);
+    _scene->addToCollisionDetection(_player);
 }
 
 MainWindow::~MainWindow()
@@ -60,7 +66,7 @@ int MainWindow::runLoop()
 
         setView(*_view);
 
-        clear(sf::Color(134, 145, 144, 255));
+        clear(sf::Color(87, 179, 113, 255));
         _scene->render(this, &sf::RenderStates::Default);
         display();
     }
@@ -79,13 +85,15 @@ void MainWindow::handleSfmlEvent(const sf::Event &event)
     }
     case sf::Event::KeyPressed:
     {
-        KeyPressEvent e{ Keyboard::Key(event.key.code) };
+        KeyPressEvent e{ Keyboard::Key(event.key.code), event.key.shift, event.key.alt,
+                         event.key.control };
         handleEvent(&e);
         break;
     }
     case sf::Event::KeyReleased:
     {
-        KeyReleaseEvent e{ Keyboard::Key(event.key.code) };
+        KeyReleaseEvent e{ Keyboard::Key(event.key.code), event.key.shift, event.key.alt,
+                           event.key.control };
         handleEvent(&e);
         break;
     }

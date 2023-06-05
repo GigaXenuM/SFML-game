@@ -16,3 +16,4 @@ template <typename T> struct Point
 };
 
 using PointF = Point<float>;
+using PointI = Point<int>;

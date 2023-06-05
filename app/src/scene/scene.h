@@ -34,6 +34,7 @@ public:
 
 private:
     void detectCollision();
+    void handleCollision(CollisionItem *collisionItem, const std::vector<Item *> &items);
 
     std::vector<Item *> _graphicsItems;
     std::vector<CollisionItem *> _collisinDetectables;

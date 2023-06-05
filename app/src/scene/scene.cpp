@@ -63,12 +63,17 @@ void Scene::detectCollision()
                          return condition1 && condition2;
                      });
 
-        for (auto *item : itemsToDetectCollision)
-        {
-            auto collisionRect{ detectable->intersects(*item) };
-            if (collisionRect.has_value())
-                detectable->handleCollision(collisionRect.value());
-        }
+        handleCollision(detectable, itemsToDetectCollision);
+    }
+}
+
+void Scene::handleCollision(CollisionItem *collisionItem, const std::vector<Item *> &items)
+{
+    for (auto *item : items)
+    {
+        auto collisionRect{ collisionItem->intersects(*item) };
+        if (collisionRect.has_value())
+            collisionItem->handleCollision(collisionRect.value());
     }
 }
 } // namespace Scene
