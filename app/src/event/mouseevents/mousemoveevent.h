@@ -14,8 +14,8 @@ public:
         return EventType::MOUSE_MOVE;
     }
 
-    PointF pos() const;
-    PointF lastPos() const;
+    PointF position() const;
+    PointF lastPosition() const;
 
 private:
     PointF _pos;

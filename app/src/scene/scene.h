@@ -1,7 +1,9 @@
 #pragma once
 
 #include "event/eventhandler.h"
+#include "irenderer.h"
 
+#include <memory>
 #include <vector>
 
 namespace sf
@@ -16,7 +18,7 @@ namespace Scene
 class Item;
 class CollisionItem;
 
-class Scene : public EventHandler
+class Scene : public EventHandler, public IRenderer
 {
 public:
     explicit Scene(EventHandler *parent);
@@ -24,20 +26,21 @@ public:
 
     void addItem();
 
-    void render(sf::RenderTarget *target, const sf::RenderStates *states);
+    void render(sf::RenderTarget &target, const sf::RenderStates &states) override;
 
-    std::vector<Item *> items() const;
+    std::vector<std::shared_ptr<Item>> items() const;
 
-    void addItem(Item *item);
+    void addItem(std::shared_ptr<Item> item);
 
-    void addToCollisionDetection(CollisionItem *item);
+    void addToCollisionDetection(std::shared_ptr<CollisionItem> item);
 
 private:
     void detectCollision();
-    void handleCollision(CollisionItem *collisionItem, const std::vector<Item *> &items);
+    void handleCollision(std::shared_ptr<CollisionItem> collisionItem,
+                         const std::vector<std::shared_ptr<Item>> &items);
 
-    std::vector<Item *> _graphicsItems;
-    std::vector<CollisionItem *> _collisinDetectables;
+    std::vector<std::shared_ptr<Item>> _graphicsItems;
+    std::vector<std::shared_ptr<CollisionItem>> _collisinDetectables;
 };
 
 } // namespace Scene

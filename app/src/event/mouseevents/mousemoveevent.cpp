@@ -4,12 +4,12 @@ MouseMoveEvent::MouseMoveEvent(PointF pos, PointF lastPos) : _pos{ pos }, _lastP
 {
 }
 
-PointF MouseMoveEvent::pos() const
+PointF MouseMoveEvent::position() const
 {
     return _pos;
 }
 
-PointF MouseMoveEvent::lastPos() const
+PointF MouseMoveEvent::lastPosition() const
 {
     return _lastPos;
 }

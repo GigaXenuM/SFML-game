@@ -6,6 +6,7 @@
 
 #include "geometry/utils.h"
 
+#include "SFML/Graphics/RenderTarget.hpp"
 #include "SFML/System/Time.hpp"
 
 #include <iostream>
@@ -23,9 +24,9 @@ Player::Player(std::shared_ptr<sf::Texture> texture, EventHandler *parent)
     _drawableItem.scale({ 4, 4 });
 }
 
-const sf::Drawable &Player::drawableItem() const
+void Player::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
 {
-    return _drawableItem;
+    target.draw(_drawableItem, states);
 }
 
 void Player::update()
@@ -112,17 +113,20 @@ void Player::handleMoving()
     if (!isMoved())
     {
         _animation.setRow(0);
-        _animation.setColumn(0);
+        _animation.setColumn(1);
         return;
     }
 
     float speed{ 100.0f * deltatime };
     size_t textureOffset{ 0 };
 
+    _animation.setSwitchTime(0.25f);
+
     if (static_cast<bool>(_keyboardMode & Mode::Shift))
     {
         speed *= 1.5f;
         textureOffset = 4;
+        _animation.setSwitchTime(0.15f);
     }
 
     if (_keyStates[static_cast<size_t>(Key::A)])

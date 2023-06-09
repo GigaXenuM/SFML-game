@@ -5,7 +5,9 @@
 
 #include <SFML/Graphics.hpp>
 
-class View;
+class GameMenu;
+class MenuView;
+class GameView;
 
 namespace Scene
 {
@@ -19,14 +21,20 @@ public:
     explicit MainWindow(unsigned int width, unsigned int height, const char *name);
     virtual ~MainWindow();
 
-    int runLoop();
+    int gameLoop();
 
 private:
     void handleSfmlEvent(const sf::Event &event);
 
-    Scene::Scene *_scene;
-    Scene::Player *_player;
-    View *_view;
+    void composeMenu();
+    void composeScene();
 
-    MouseMoveEvent _lastMouseMoveEvent;
+    std::shared_ptr<MenuView> _menuView;
+    std::shared_ptr<GameMenu> _gameMenu;
+
+    std::shared_ptr<Scene::Scene> _scene;
+    std::shared_ptr<Scene::Player> _player;
+    std::shared_ptr<GameView> _gameView;
+
+    MouseMoveEvent _latestMouseMoveEvent;
 };

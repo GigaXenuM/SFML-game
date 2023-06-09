@@ -3,5 +3,5 @@
 int main()
 {
     MainWindow window{ 800, 600, "Game" };
-    return window.runLoop();
+    return window.gameLoop();
 }

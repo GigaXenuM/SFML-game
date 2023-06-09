@@ -2,7 +2,6 @@
 
 #include "scene/animation/animation.h"
 #include "scene/items/collisionitem.h"
-#include "scene/items/item.h"
 
 #include "event/keyevents/keyboard.h"
 #include "geometry/point.h"
@@ -26,7 +25,8 @@ public:
     explicit Player(std::shared_ptr<sf::Texture> texture, EventHandler *parent);
     virtual ~Player() = default;
 
-    const sf::Drawable &drawableItem() const override;
+    void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
+
     RectF globalRect() const override;
     RectF collisionRect() const override;
     PointF center() const override;

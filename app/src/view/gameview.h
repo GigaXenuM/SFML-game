@@ -6,10 +6,10 @@
 
 #include <SFML/Graphics/View.hpp>
 
-class View : public sf::View, public EventHandler
+class GameView : public sf::View, public EventHandler
 {
 public:
-    explicit View(RectF rect, EventHandler *parent);
+    explicit GameView(RectF rect, EventHandler *parent);
 
     void mousePressEvent(MousePressEvent *event) override;
     void mouseReleaseEvent(MouseReleaseEvent *event) override;

@@ -5,14 +5,14 @@
 #include "geometry/point.h"
 #include "geometry/rect.h"
 
-#include <SFML/Graphics/Drawable.hpp>
+#include "SFML/Graphics/Drawable.hpp"
 
 #include <optional>
 
 namespace Scene
 {
 
-class Item : public EventHandler
+class Item : public EventHandler, public sf::Drawable
 {
 public:
     explicit Item(EventHandler *parent)
@@ -22,7 +22,6 @@ public:
     }
     virtual ~Item() = default;
 
-    virtual const sf::Drawable &drawableItem() const = 0;
     virtual RectF globalRect() const = 0;
     virtual RectF collisionRect() const = 0;
     virtual PointF center() const = 0;

@@ -3,13 +3,20 @@ cmake_minimum_required(VERSION 3.20)
 set(HEADER_FILES
     src/mainwindow.h
 
-    src/view/view.h
+    src/ibutton.h
+
+    src/view/gameview.h
+    src/view/menuview.h
+
+    src/irenderer.h
+    src/idrawable.h
 
     src/scene/scene.h
     src/scene/items/player/player.h
     src/scene/items/item.h
     src/scene/items/testitem.h
     src/scene/items/collisionitem.h
+    src/scene/items/button/textbutton.h
     src/scene/animation/animation.h
     src/scene/textures/textures.h
 
@@ -27,6 +34,8 @@ set(HEADER_FILES
     src/geometry/rect.h
     src/geometry/size.h
     src/geometry/utils.h
+
+    src/menu/gamemenu.h
 )
 
 set(SOURCE_FILES
@@ -34,12 +43,14 @@ set(SOURCE_FILES
 
     src/mainwindow.cpp
 
-    src/view/view.cpp
+    src/view/gameview.cpp
+    src/view/menuview.cpp
 
     src/scene/scene.cpp
     src/scene/items/item.cpp
     src/scene/items/player/player.cpp
     src/scene/items/testitem.cpp
+    src/scene/items/button/textbutton.cpp
     src/scene/animation/animation.cpp
     src/scene/textures/textures.cpp
 
@@ -51,6 +62,8 @@ set(SOURCE_FILES
     src/event/mouseevents/mousereleaseevent.cpp
 
     src/geometry/utils.cpp
+
+    src/menu/gamemenu.cpp
 )
 
 include_directories(

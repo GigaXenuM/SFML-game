@@ -2,6 +2,8 @@
 
 #include "geometry/utils.h"
 
+#include "SFML/Graphics/RenderTarget.hpp"
+
 namespace Scene
 {
 TestItem::TestItem() : Item{ nullptr }, _drawableItem{ { 50.0f, 50.0f } }
@@ -9,9 +11,9 @@ TestItem::TestItem() : Item{ nullptr }, _drawableItem{ { 50.0f, 50.0f } }
     _drawableItem.setFillColor(sf::Color::Red);
 }
 
-const sf::Drawable &TestItem::drawableItem() const
+void TestItem::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
 {
-    return _drawableItem;
+    target.draw(_drawableItem, states);
 }
 
 RectF TestItem::globalRect() const
