@@ -7,7 +7,6 @@
 #include "geometry/point.h"
 
 #include "SFML/Graphics/Texture.hpp"
-#include "SFML/System/Clock.hpp"
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
@@ -28,11 +27,13 @@ public:
     void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
 
     RectF globalRect() const override;
+    RectF localRect() const override;
     RectF collisionRect() const override;
     PointF center() const override;
 
-    void update() override;
+    void update(float deltatime) override;
     void setPos(PointF position) override;
+    void setOrigin(Align origin) override;
 
     void handleCollision(RectF collisionRect) override;
 
@@ -41,8 +42,7 @@ protected:
     void keyReleaseEvent(KeyReleaseEvent *event) override;
 
 private:
-    bool isMoved();
-    void handleMoving();
+    void handleMoving(float deltaTime);
 
     std::shared_ptr<sf::Texture> _texture;
     sf::Sprite _drawableItem;
@@ -50,7 +50,5 @@ private:
     Animation _animation;
     std::array<bool, static_cast<size_t>(Keyboard::Key::MAX_SIZE)> _keyStates;
     Keyboard::Mode _keyboardMode;
-
-    sf::Clock _clock;
 };
 } // namespace Scene

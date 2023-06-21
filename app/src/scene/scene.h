@@ -21,12 +21,12 @@ class CollisionItem;
 class Scene : public EventHandler, public IRenderer
 {
 public:
-    explicit Scene(EventHandler *parent);
+    explicit Scene(sf::RenderTarget *renderTarget, EventHandler *parent);
     virtual ~Scene() = default;
 
     void addItem();
 
-    void render(sf::RenderTarget &target, const sf::RenderStates &states) override;
+    void render(float deltatime) override;
 
     std::vector<std::shared_ptr<Item>> items() const;
 
@@ -39,6 +39,7 @@ private:
     void handleCollision(std::shared_ptr<CollisionItem> collisionItem,
                          const std::vector<std::shared_ptr<Item>> &items);
 
+    sf::RenderTarget *_renderTarget{ nullptr };
     std::vector<std::shared_ptr<Item>> _graphicsItems;
     std::vector<std::shared_ptr<CollisionItem>> _collisinDetectables;
 };

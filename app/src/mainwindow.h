@@ -3,11 +3,13 @@
 #include "event/eventhandler.h"
 #include "event/mouseevents/mousemoveevent.h"
 
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 
-class GameMenu;
+class Menu;
 class MenuView;
-class GameView;
+class SceneView;
+class IRenderer;
+class IView;
 
 namespace Scene
 {
@@ -23,18 +25,32 @@ public:
 
     int gameLoop();
 
+protected:
+    void keyPressEvent(KeyPressEvent *event) override;
+
 private:
     void handleSfmlEvent(const sf::Event &event);
 
     void composeMenu();
     void composeScene();
 
+    void switchContent();
+    void switchToGame();
+    void switchToMenu();
+
+    sf::Clock _clock;
+
     std::shared_ptr<MenuView> _menuView;
-    std::shared_ptr<GameMenu> _gameMenu;
+    std::shared_ptr<Menu> _menu;
 
     std::shared_ptr<Scene::Scene> _scene;
     std::shared_ptr<Scene::Player> _player;
-    std::shared_ptr<GameView> _gameView;
+    std::shared_ptr<SceneView> _sceneView;
 
     MouseMoveEvent _latestMouseMoveEvent;
+
+    std::shared_ptr<IRenderer> _renderer;
+    std::shared_ptr<IView> _view;
+
+    bool _showMenu{ true };
 };

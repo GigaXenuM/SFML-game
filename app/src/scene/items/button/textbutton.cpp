@@ -1,6 +1,9 @@
 #include "textbutton.h"
 
 #include "event/mouseevents/mousepressevent.h"
+#include "event/mouseevents/mousereleaseevent.h"
+
+#include "geometry/alignment.h"
 #include "geometry/utils.h"
 
 #include "SFML/Graphics/RenderTarget.hpp"
@@ -35,9 +38,19 @@ void TextButton::setPos(PointF position)
     updateGeometry();
 }
 
+void TextButton::setOrigin(Align origin)
+{
+    _shape.setOrigin(Geometry::toSfmlPoint(localRect().pointBy(origin)));
+}
+
 RectF TextButton::globalRect() const
 {
     return Geometry::toRect(_shape.getGlobalBounds());
+}
+
+RectF TextButton::localRect() const
+{
+    return Geometry::toRect(_shape.getLocalBounds());
 }
 
 RectF TextButton::collisionRect() const
@@ -86,6 +99,9 @@ void TextButton::mousePressEvent(MousePressEvent *event)
 
 void TextButton::mouseReleaseEvent(MouseReleaseEvent *event)
 {
+    if (event->button() != Mouse::Button::Left)
+        return;
+
     if (_pressed)
     {
         _shape.setFillColor({ 50, 50, 50 });

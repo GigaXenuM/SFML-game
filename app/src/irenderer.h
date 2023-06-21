@@ -9,5 +9,5 @@ class RenderStates;
 class IRenderer
 {
 public:
-    virtual void render(sf::RenderTarget &target, const sf::RenderStates &states) = 0;
+    virtual void render(float deltatime) = 0;
 };

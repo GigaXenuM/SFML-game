@@ -21,6 +21,11 @@ RectF TestItem::globalRect() const
     return Geometry::toRect(_drawableItem.getGlobalBounds());
 }
 
+RectF TestItem::localRect() const
+{
+    return Geometry::toRect(_drawableItem.getLocalBounds());
+}
+
 RectF TestItem::collisionRect() const
 {
     return globalRect();
@@ -37,5 +42,10 @@ PointF TestItem::center() const
 void TestItem::setPos(PointF position)
 {
     _drawableItem.setPosition({ position.x, position.y });
+}
+
+void TestItem::setOrigin(Align origin)
+{
+    _drawableItem.setOrigin(Geometry::toSfmlPoint(localRect().pointBy(origin)));
 }
 } // namespace Scene

@@ -11,11 +11,13 @@ enum class Key : unsigned long long
     D = sf::Keyboard::D,
     S = sf::Keyboard::S,
     W = sf::Keyboard::W,
+    F = sf::Keyboard::F,
     Left = sf::Keyboard::Left,
     Right = sf::Keyboard::Right,
     Up = sf::Keyboard::Up,
     Down = sf::Keyboard::Down,
     Space = sf::Keyboard::Space,
+    Escape = sf::Keyboard::Escape,
 
     MAX_SIZE = sf::Keyboard::KeyCount
 };

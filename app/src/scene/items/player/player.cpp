@@ -29,15 +29,21 @@ void Player::draw(sf::RenderTarget &target, const sf::RenderStates &states) cons
     target.draw(_drawableItem, states);
 }
 
-void Player::update()
+void Player::update(float deltatime)
 {
-    handleMoving();
+    handleMoving(deltatime);
+
     _drawableItem.setTextureRect(sf::IntRect{ Geometry::toSfmlRect(_animation.viewRect()) });
 }
 
 void Player::setPos(PointF position)
 {
     _drawableItem.setPosition({ position.x, position.y });
+}
+
+void Player::setOrigin(Align origin)
+{
+    _drawableItem.setOrigin(Geometry::toSfmlPoint(localRect().pointBy(origin)));
 }
 
 void Player::handleCollision(RectF collisionRect)
@@ -75,6 +81,11 @@ RectF Player::globalRect() const
     return Geometry::toRect(_drawableItem.getGlobalBounds());
 }
 
+RectF Player::localRect() const
+{
+    return Geometry::toRect(_drawableItem.getLocalBounds());
+}
+
 RectF Player::collisionRect() const
 {
     float widthOffset{ 6.0f };
@@ -97,28 +108,15 @@ void Player::keyReleaseEvent(KeyReleaseEvent *event)
     _keyboardMode = event->mode();
 }
 
-bool Player::isMoved()
-{
-    using Keyboard::Key;
-    return _keyStates[static_cast<size_t>(Key::A)] || _keyStates[static_cast<size_t>(Key::D)]
-           || _keyStates[static_cast<size_t>(Key::W)] || _keyStates[static_cast<size_t>(Key::S)];
-}
-
-void Player::handleMoving()
+void Player::handleMoving(float deltaTime)
 {
     using Keyboard::Key;
     using Keyboard::Mode;
-    float deltatime{ _clock.restart().asSeconds() };
 
-    if (!isMoved())
-    {
-        _animation.setRow(0);
-        _animation.setColumn(1);
-        return;
-    }
-
-    float speed{ 100.0f * deltatime };
     size_t textureOffset{ 0 };
+
+    PointF deltaPos{};
+    float speed{ 100.0f * deltaTime };
 
     _animation.setSwitchTime(0.25f);
 
@@ -131,25 +129,38 @@ void Player::handleMoving()
 
     if (_keyStates[static_cast<size_t>(Key::A)])
     {
-        _drawableItem.move({ -speed, .0f });
+        deltaPos.x -= 1;
         _animation.setRow(textureOffset + 2);
     }
     if (_keyStates[static_cast<size_t>(Key::D)])
     {
-        _drawableItem.move({ speed, .0f });
+        deltaPos.x += 1;
         _animation.setRow(textureOffset + 3);
     }
     if (_keyStates[static_cast<size_t>(Key::W)])
     {
-        _drawableItem.move({ .0f, -speed });
+        deltaPos.y -= 1;
         _animation.setRow(textureOffset + 1);
     }
     if (_keyStates[static_cast<size_t>(Key::S)])
     {
-        _drawableItem.move({ .0f, speed });
+        deltaPos.y += 1;
         _animation.setRow(textureOffset + 0);
     }
 
-    _animation.update(deltatime);
+    if (deltaPos.isDefault())
+    {
+        _animation.setRow(0);
+        _animation.setColumn(1);
+        return;
+    }
+    else if (deltaPos.x != 0 && deltaPos.y != 0)
+    {
+        speed /= sqrt(2);
+    }
+
+    _drawableItem.move({ speed * deltaPos.x, speed * deltaPos.y });
+
+    _animation.update(deltaTime);
 }
 } // namespace Scene

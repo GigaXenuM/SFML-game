@@ -8,3 +8,4 @@ template <typename T> struct Size
 
 using SizeF = Size<float>;
 using SizeI = Size<int>;
+using SizeU = Size<unsigned int>;

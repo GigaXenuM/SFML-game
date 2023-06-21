@@ -5,8 +5,12 @@ set(HEADER_FILES
 
     src/ibutton.h
 
-    src/view/gameview.h
+    src/view/iview.h
+    src/view/sceneview.h
     src/view/menuview.h
+
+    src/layout/layout.h
+    src/layout/verticallayout.h
 
     src/irenderer.h
     src/idrawable.h
@@ -34,8 +38,9 @@ set(HEADER_FILES
     src/geometry/rect.h
     src/geometry/size.h
     src/geometry/utils.h
+    src/geometry/alignment.h
 
-    src/menu/gamemenu.h
+    src/menu/menu.h
 )
 
 set(SOURCE_FILES
@@ -43,8 +48,11 @@ set(SOURCE_FILES
 
     src/mainwindow.cpp
 
-    src/view/gameview.cpp
+    src/view/sceneview.cpp
     src/view/menuview.cpp
+
+    src/layout/layout.cpp
+    src/layout/verticallayout.cpp
 
     src/scene/scene.cpp
     src/scene/items/item.cpp
@@ -63,7 +71,7 @@ set(SOURCE_FILES
 
     src/geometry/utils.cpp
 
-    src/menu/gamemenu.cpp
+    src/menu/menu.cpp
 )
 
 include_directories(

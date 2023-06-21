@@ -9,6 +9,8 @@
 
 #include <optional>
 
+enum class Align;
+
 namespace Scene
 {
 
@@ -23,12 +25,14 @@ public:
     virtual ~Item() = default;
 
     virtual RectF globalRect() const = 0;
+    virtual RectF localRect() const = 0;
     virtual RectF collisionRect() const = 0;
     virtual PointF center() const = 0;
 
     virtual std::optional<RectF> intersects(const Item &item) const;
 
-    virtual void update(){};
+    virtual void update(float /*deltatime*/){};
     virtual void setPos(PointF position) = 0;
+    virtual void setOrigin(Align origin) = 0;
 };
 } // namespace Scene

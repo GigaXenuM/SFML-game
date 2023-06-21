@@ -1,5 +1,6 @@
 #pragma once
 
+#include "alignment.h"
 #include "point.h"
 #include "rect.h"
 #include "size.h"

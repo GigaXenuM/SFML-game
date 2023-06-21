@@ -15,20 +15,20 @@
 
 namespace Scene
 {
-Scene::Scene(EventHandler *parent)
+Scene::Scene(sf::RenderTarget *renderTarget, EventHandler *parent) : _renderTarget{ renderTarget }
 {
     if (parent != nullptr)
         parent->addEventHandler(this);
 }
 
-void Scene::render(sf::RenderTarget &target, const sf::RenderStates &states)
+void Scene::render(float deltatime)
 {
-    target.clear(sf::Color(87, 179, 113, 255));
+    _renderTarget->clear(sf::Color(87, 179, 113, 255));
 
     for (const auto &item : _graphicsItems)
     {
-        item->update();
-        target.draw(*item, states);
+        item->update(deltatime);
+        _renderTarget->draw(*item);
     }
 
     detectCollision();

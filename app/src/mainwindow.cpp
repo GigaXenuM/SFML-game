@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 
+#include "layout/verticallayout.h"
+
+#include "scene/items/button/textbutton.h"
 #include "scene/items/player/player.h"
 #include "scene/items/testitem.h"
 #include "scene/scene.h"
@@ -13,27 +16,36 @@
 #include "geometry/rect.h"
 #include "geometry/utils.h"
 
-#include "view/gameview.h"
+#include "view/iview.h"
 #include "view/menuview.h"
+#include "view/sceneview.h"
 
-#include "menu/gamemenu.h"
+#include "menu/menu.h"
 
 #include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/VideoMode.hpp>
+
+#include <iostream>
 
 std::shared_ptr<sf::Texture> playerTexture{ std::make_shared<sf::Texture>() };
 
 MainWindow::MainWindow(unsigned int width, unsigned int height, const char *name)
     : sf::RenderWindow{ sf::VideoMode({ width, height }), name },
       _menuView{ std::make_shared<MenuView>(
-          RectF{ { 0.f, 0.f }, { static_cast<float>(width), static_cast<float>(height) } }, this) },
-      _gameMenu{ std::make_shared<GameMenu>(this) },
-      _scene{ std::make_shared<Scene::Scene>(this) },
+          this, RectF{ { 0.f, 0.f }, { static_cast<float>(width), static_cast<float>(height) } },
+          this) },
+      _menu{ std::make_shared<Menu>(this, this) },
+      _scene{ std::make_shared<Scene::Scene>(this, this) },
       _player{ std::make_shared<Scene::Player>(
           std::make_shared<sf::Texture>(Scene::playerTexture()), _scene.get()) },
-      _gameView{ std::make_shared<GameView>(
+      _sceneView{ std::make_shared<SceneView>(
+          this,
           RectF{ _player->center(), { static_cast<float>(width), static_cast<float>(height) } },
           this) },
-      _latestMouseMoveEvent{ {}, {} }
+      _latestMouseMoveEvent{ {}, {} },
+      _renderer{ _menu },
+      _view{ _menuView }
 {
     composeMenu();
     composeScene();
@@ -47,19 +59,25 @@ int MainWindow::gameLoop()
 {
     while (isOpen())
     {
+        float deltatime{ _clock.restart().asSeconds() };
+
         sf::Event event;
         while (pollEvent(event))
-        {
             handleSfmlEvent(event);
-        }
 
-        setView(*_menuView);
+        _view->update(deltatime);
+        _renderer->render(deltatime);
 
-        _gameMenu->render(*this, sf::RenderStates::Default);
         display();
     }
 
     return 0;
+}
+
+void MainWindow::keyPressEvent(KeyPressEvent *event)
+{
+    if (event->key() == Keyboard::Key::Escape)
+        switchContent();
 }
 
 void MainWindow::handleSfmlEvent(const sf::Event &event)
@@ -110,6 +128,14 @@ void MainWindow::handleSfmlEvent(const sf::Event &event)
         _latestMouseMoveEvent = e;
         break;
     }
+    case sf::Event::Resized:
+    {
+        _menuView->setSize(
+            { static_cast<float>(event.size.width), static_cast<float>(event.size.height) });
+        _sceneView->setSize(
+            { static_cast<float>(event.size.width), static_cast<float>(event.size.height) });
+        break;
+    }
     default:
         break;
     }
@@ -117,6 +143,26 @@ void MainWindow::handleSfmlEvent(const sf::Event &event)
 
 void MainWindow::composeMenu()
 {
+    auto layout{ std::make_shared<VerticalLayout>(
+        static_cast<RectF>(Geometry::toRect(getViewport(getView()))), this) };
+    layout->setSpacing(20);
+
+    _menu->setLayout(std::move(layout));
+    sf::Font font;
+    bool successLoad{ font.loadFromFile("res/fonts/arial.ttf") };
+    if (!successLoad)
+        std::cerr << "GameMenu: Failed load font." << std::endl;
+
+    auto startButton{ std::make_shared<Scene::TextButton>("Start Game", font,
+                                                          SizeF{ 180.0f, 50.0f }, this) };
+    auto exitButton{ std::make_shared<Scene::TextButton>("Exit", font, SizeF{ 180.0f, 50.0f },
+                                                         this) };
+
+    startButton->onClick([this]() { switchContent(); });
+    exitButton->onClick([this]() { close(); });
+
+    _menu->addItem(startButton);
+    _menu->addItem(exitButton);
 }
 
 void MainWindow::composeScene()
@@ -138,4 +184,28 @@ void MainWindow::composeScene()
 
     _scene->addItem(_player);
     _scene->addToCollisionDetection(_player);
+
+    _sceneView->setCenterTarget(_player);
+}
+
+void MainWindow::switchContent()
+{
+    _showMenu = !_showMenu;
+
+    if (_showMenu)
+        switchToMenu();
+    else
+        switchToGame();
+}
+
+void MainWindow::switchToGame()
+{
+    _renderer = _scene;
+    _view = _sceneView;
+}
+
+void MainWindow::switchToMenu()
+{
+    _renderer = _menu;
+    _view = _menuView;
 }
