@@ -1,3 +1,4 @@
+
 #pragma once
 
 #include "scene/items/item.h"
@@ -7,16 +8,15 @@
 namespace Scene
 {
 
-class TestItem : public Item
+class Rect : public Item
 {
 public:
-    TestItem();
+    Rect();
 
     void draw(sf::RenderTarget &target, const sf::RenderStates &states) const override;
 
     RectF globalRect() const override;
     RectF localRect() const override;
-    RectF collisionRect() const override;
     PointF center() const override;
 
     void setPos(PointF position) override;

@@ -4,7 +4,8 @@
 
 #include "scene/items/button/textbutton.h"
 #include "scene/items/player/player.h"
-#include "scene/items/testitem.h"
+#include "scene/items/rectangles/collisionrect.h"
+#include "scene/items/rectangles/rect.h"
 #include "scene/scene.h"
 #include "scene/textures/textures.h"
 
@@ -37,8 +38,8 @@ MainWindow::MainWindow(unsigned int width, unsigned int height, const char *name
           this) },
       _menu{ std::make_shared<Menu>(this, this) },
       _scene{ std::make_shared<Scene::Scene>(this, this) },
-      _player{ std::make_shared<Scene::Player>(
-          std::make_shared<sf::Texture>(Scene::playerTexture()), _scene.get()) },
+      _player{ new Scene::Player(std::make_shared<sf::Texture>(Scene::playerTexture()),
+                                 _scene.get()) },
       _sceneView{ std::make_shared<SceneView>(
           this,
           RectF{ _player->center(), { static_cast<float>(width), static_cast<float>(height) } },
@@ -167,15 +168,15 @@ void MainWindow::composeMenu()
 
 void MainWindow::composeScene()
 {
-    std::shared_ptr<Scene::TestItem> item1{ std::make_shared<Scene::TestItem>() };
-    std::shared_ptr<Scene::TestItem> item2{ std::make_shared<Scene::TestItem>() };
-    std::shared_ptr<Scene::TestItem> item3{ std::make_shared<Scene::TestItem>() };
-    std::shared_ptr<Scene::TestItem> item4{ std::make_shared<Scene::TestItem>() };
+    Scene::Item *item1{ new Scene::CollisionRect() };
+    Scene::Item *item2{ new Scene::CollisionRect() };
+    Scene::Item *item3{ new Scene::CollisionRect() };
+    Scene::Item *item4{ new Scene::Rect() };
 
-    item1->setPos({ -20, 300 });
-    item2->setPos({ 35, -70 });
-    item3->setPos({ 400, 320 });
-    item4->setPos({ 400, 400 });
+    item1->setPos({ -100, 250 });
+    item2->setPos({ 123, -70 });
+    item3->setPos({ 250, -175 });
+    item4->setPos({ -200, 50 });
 
     _scene->addItem(item1);
     _scene->addItem(item2);
@@ -183,7 +184,7 @@ void MainWindow::composeScene()
     _scene->addItem(item4);
 
     _scene->addItem(_player);
-    _scene->addToCollisionDetection(_player);
+    _scene->detectCollisionFor(_player);
 
     _sceneView->setCenterTarget(_player);
 }

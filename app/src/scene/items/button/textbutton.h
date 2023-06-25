@@ -31,7 +31,6 @@ public:
 
     RectF globalRect() const override;
     RectF localRect() const override;
-    RectF collisionRect() const override;
     PointF center() const override;
 
     void setTextColor(sf::Color color);

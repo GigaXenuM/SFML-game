@@ -44,7 +44,7 @@ private:
     std::shared_ptr<Menu> _menu;
 
     std::shared_ptr<Scene::Scene> _scene;
-    std::shared_ptr<Scene::Player> _player;
+    Scene::Player *_player;
     std::shared_ptr<SceneView> _sceneView;
 
     MouseMoveEvent _latestMouseMoveEvent;

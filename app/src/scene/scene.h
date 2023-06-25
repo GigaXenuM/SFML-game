@@ -17,6 +17,9 @@ namespace Scene
 {
 class Item;
 class CollisionItem;
+class CollisionHandler;
+struct ItemContext;
+class Drawable;
 
 class Scene : public EventHandler, public IRenderer
 {
@@ -28,20 +31,18 @@ public:
 
     void render(float deltatime) override;
 
-    std::vector<std::shared_ptr<Item>> items() const;
+    void addItem(Item *item);
 
-    void addItem(std::shared_ptr<Item> item);
-
-    void addToCollisionDetection(std::shared_ptr<CollisionItem> item);
+    void detectCollisionFor(CollisionHandler *item);
 
 private:
     void detectCollision();
-    void handleCollision(std::shared_ptr<CollisionItem> collisionItem,
-                         const std::vector<std::shared_ptr<Item>> &items);
+    void handleCollision(CollisionHandler *collisionHandler,
+                         const std::vector<CollisionItem *> &collisionItems);
 
     sf::RenderTarget *_renderTarget{ nullptr };
-    std::vector<std::shared_ptr<Item>> _graphicsItems;
-    std::vector<std::shared_ptr<CollisionItem>> _collisinDetectables;
+    std::shared_ptr<ItemContext> _itemContext;
+    std::vector<Drawable *> _itemsToDrawing;
 };
 
 } // namespace Scene

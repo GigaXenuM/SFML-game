@@ -53,11 +53,6 @@ RectF TextButton::localRect() const
     return Geometry::toRect(_shape.getLocalBounds());
 }
 
-RectF TextButton::collisionRect() const
-{
-    return globalRect();
-}
-
 PointF TextButton::center() const
 {
     sf::FloatRect bound{ _shape.getGlobalBounds() };

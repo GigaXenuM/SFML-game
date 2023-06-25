@@ -1,10 +1,12 @@
 #include "scene.h"
 
-#include "items/collisionitem.h"
-
+#include "itemcontext.h"
+#include "items/collisionhandler.h"
 #include "items/item.h"
 
 #include "geometry/utils.h"
+
+#include "visitors/sortitemsvisitor.h"
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
@@ -15,7 +17,8 @@
 
 namespace Scene
 {
-Scene::Scene(sf::RenderTarget *renderTarget, EventHandler *parent) : _renderTarget{ renderTarget }
+Scene::Scene(sf::RenderTarget *renderTarget, EventHandler *parent)
+    : _renderTarget{ renderTarget }, _itemContext{ std::make_shared<ItemContext>() }
 {
     if (parent != nullptr)
         parent->addEventHandler(this);
@@ -25,7 +28,7 @@ void Scene::render(float deltatime)
 {
     _renderTarget->clear(sf::Color(87, 179, 113, 255));
 
-    for (const auto &item : _graphicsItems)
+    for (const auto &item : _itemsToDrawing)
     {
         item->update(deltatime);
         _renderTarget->draw(*item);
@@ -34,27 +37,25 @@ void Scene::render(float deltatime)
     detectCollision();
 }
 
-std::vector<std::shared_ptr<Item>> Scene::items() const
+void Scene::addItem(Item *item)
 {
-    return _graphicsItems;
+    SortItemsVisitor visitor{ _itemContext };
+    item->accept(&visitor);
+
+    _itemsToDrawing.push_back(item);
 }
 
-void Scene::addItem(std::shared_ptr<Item> item)
+void Scene::detectCollisionFor(CollisionHandler *item)
 {
-    _graphicsItems.push_back(item);
-}
-
-void Scene::addToCollisionDetection(std::shared_ptr<CollisionItem> item)
-{
-    _collisinDetectables.push_back(item);
+    _itemContext->collisionHandlers.push_back(item);
 }
 
 void Scene::detectCollision()
 {
-    for (const auto &detectable : _collisinDetectables)
+    for (const auto &detectable : _itemContext->collisionHandlers)
     {
-        std::vector<std::shared_ptr<Item>> itemsToDetectCollision;
-        std::copy_if(_graphicsItems.begin(), _graphicsItems.end(),
+        std::vector<CollisionItem *> itemsToDetectCollision;
+        std::copy_if(_itemContext->collisionItems.begin(), _itemContext->collisionItems.end(),
                      std::back_inserter(itemsToDetectCollision),
                      [detectable](auto item)
                      {
@@ -69,14 +70,14 @@ void Scene::detectCollision()
     }
 }
 
-void Scene::handleCollision(std::shared_ptr<CollisionItem> collisionItem,
-                            const std::vector<std::shared_ptr<Item>> &items)
+void Scene::handleCollision(CollisionHandler *collisionHandler,
+                            const std::vector<CollisionItem *> &collisionItems)
 {
-    for (const auto &item : items)
+    for (const auto &collisionItem : collisionItems)
     {
-        auto collisionRect{ collisionItem->intersects(*item) };
+        auto collisionRect{ collisionHandler->intersects(*collisionItem) };
         if (collisionRect.has_value())
-            collisionItem->handleCollision(collisionRect.value());
+            collisionHandler->handleCollision(collisionRect.value());
     }
 }
 } // namespace Scene

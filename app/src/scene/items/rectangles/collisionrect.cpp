@@ -1,4 +1,4 @@
-#include "testitem.h"
+#include "collisionrect.h"
 
 #include "geometry/utils.h"
 
@@ -6,32 +6,32 @@
 
 namespace Scene
 {
-TestItem::TestItem() : Item{ nullptr }, _drawableItem{ { 50.0f, 50.0f } }
+CollisionRect::CollisionRect() : CollisionItem{ nullptr }, _drawableItem{ { 50.0f, 50.0f } }
 {
     _drawableItem.setFillColor(sf::Color::Red);
 }
 
-void TestItem::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
+void CollisionRect::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
 {
     target.draw(_drawableItem, states);
 }
 
-RectF TestItem::globalRect() const
+RectF CollisionRect::globalRect() const
 {
     return Geometry::toRect(_drawableItem.getGlobalBounds());
 }
 
-RectF TestItem::localRect() const
+RectF CollisionRect::localRect() const
 {
     return Geometry::toRect(_drawableItem.getLocalBounds());
 }
 
-RectF TestItem::collisionRect() const
+RectF CollisionRect::collisionRect() const
 {
     return globalRect();
 }
 
-PointF TestItem::center() const
+PointF CollisionRect::center() const
 {
     auto sfmlPos{ _drawableItem.getPosition() };
     float xOffset{ _drawableItem.getSize().x / 2 };
@@ -39,12 +39,12 @@ PointF TestItem::center() const
     return { sfmlPos.x + xOffset, sfmlPos.y + yOffset };
 }
 
-void TestItem::setPos(PointF position)
+void CollisionRect::setPos(PointF position)
 {
     _drawableItem.setPosition({ position.x, position.y });
 }
 
-void TestItem::setOrigin(Align origin)
+void CollisionRect::setOrigin(Align origin)
 {
     _drawableItem.setOrigin(Geometry::toSfmlPoint(localRect().pointBy(origin)));
 }

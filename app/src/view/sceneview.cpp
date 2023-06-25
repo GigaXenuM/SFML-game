@@ -71,8 +71,8 @@ void SceneView::center(float deltaTime)
     }
 }
 
-void SceneView::setCenterTarget(std::shared_ptr<Scene::Item> centerTarget)
+void SceneView::setCenterTarget(Scene::Item *centerTarget)
 {
-    _centerTarget = std::move(centerTarget);
+    _centerTarget = centerTarget;
     _needCenter = true;
 }

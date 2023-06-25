@@ -35,12 +35,12 @@ public:
 
     void center(float deltaTime);
 
-    void setCenterTarget(std::shared_ptr<Scene::Item> centerTarget);
+    void setCenterTarget(Scene::Item *centerTarget);
 
 private:
     sf::RenderTarget *_renderTarget;
 
-    std::shared_ptr<Scene::Item> _centerTarget;
+    Scene::Item *_centerTarget;
 
     bool _canDrag{ false };
     bool _needCenter{ false };

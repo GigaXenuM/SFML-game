@@ -1,7 +1,7 @@
 #pragma once
 
 #include "scene/animation/animation.h"
-#include "scene/items/collisionitem.h"
+#include "scene/items/collisionhandler.h"
 
 #include "event/keyevents/keyboard.h"
 #include "geometry/point.h"
@@ -18,7 +18,7 @@ class EventHandler;
 namespace Scene
 {
 
-class Player : public CollisionItem
+class Player : public CollisionHandler
 {
 public:
     explicit Player(std::shared_ptr<sf::Texture> texture, EventHandler *parent);

@@ -14,7 +14,7 @@
 namespace Scene
 {
 Player::Player(std::shared_ptr<sf::Texture> texture, EventHandler *parent)
-    : CollisionItem{ parent },
+    : CollisionHandler{ parent },
       _texture{ std::move(texture) },
       _drawableItem{ *_texture },
       _animation{ _texture, 4, 8, 0.25f },

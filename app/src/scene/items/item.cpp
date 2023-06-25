@@ -1,22 +1,17 @@
 #include "item.h"
 
-#include "geometry/utils.h"
-
-#include <SFML/Graphics/Rect.hpp>
+#include "visitors/ivisitor.h"
 
 namespace Scene
 {
-
-std::optional<RectF> Item::intersects(const Item &item) const
+Item::Item(EventHandler *parent)
 {
-    std::optional<sf::FloatRect> sfmlRect{ Geometry::toSfmlRect(collisionRect())
-                                               .findIntersection(
-                                                   Geometry::toSfmlRect(item.collisionRect())) };
-
-    if (sfmlRect.has_value())
-        return Geometry::toRect(sfmlRect.value());
-
-    return std::nullopt;
+    if (parent != nullptr)
+        parent->addEventHandler(this);
 }
 
+void Item::accept(IVisitor *visitor)
+{
+    visitor->visitSceneItem(this);
+}
 } // namespace Scene

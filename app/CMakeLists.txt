@@ -16,10 +16,17 @@ set(HEADER_FILES
     src/idrawable.h
 
     src/scene/scene.h
+    src/scene/itemcontext.h
+    src/scene/visitors/ivisitor.h
+    src/scene/visitors/defaultvisitor.h
+    src/scene/visitors/sortitemsvisitor.h
     src/scene/items/player/player.h
+    src/scene/items/drawable.h
     src/scene/items/item.h
-    src/scene/items/testitem.h
     src/scene/items/collisionitem.h
+    src/scene/items/rectangles/collisionrect.h
+    src/scene/items/rectangles/rect.h
+    src/scene/items/collisionhandler.h
     src/scene/items/button/textbutton.h
     src/scene/animation/animation.h
     src/scene/textures/textures.h
@@ -41,6 +48,8 @@ set(HEADER_FILES
     src/geometry/alignment.h
 
     src/menu/menu.h
+
+    src/scene/tip/itip.h
 )
 
 set(SOURCE_FILES
@@ -55,9 +64,13 @@ set(SOURCE_FILES
     src/layout/verticallayout.cpp
 
     src/scene/scene.cpp
+    src/scene/visitors/defaultvisitor.cpp
+    src/scene/visitors/sortitemsvisitor.cpp
     src/scene/items/item.cpp
+    src/scene/items/collisionitem.cpp
     src/scene/items/player/player.cpp
-    src/scene/items/testitem.cpp
+    src/scene/items/rectangles/collisionrect.cpp
+    src/scene/items/rectangles/rect.cpp
     src/scene/items/button/textbutton.cpp
     src/scene/animation/animation.cpp
     src/scene/textures/textures.cpp
@@ -76,6 +89,12 @@ set(SOURCE_FILES
 
 include_directories(
     "${CMAKE_SOURCE_DIR}/app/src"
+    "${CMAKE_SOURCE_DIR}/app/src/scene"
+    "${CMAKE_SOURCE_DIR}/app/src/geometry"
+    "${CMAKE_SOURCE_DIR}/app/src/menu"
+    "${CMAKE_SOURCE_DIR}/app/src/view"
+    "${CMAKE_SOURCE_DIR}/app/src/layout"
+    "${CMAKE_SOURCE_DIR}/app/src/event"
 )
 
 add_executable(${PROJECT_NAME} ${HEADER_FILES} ${SOURCE_FILES} )
