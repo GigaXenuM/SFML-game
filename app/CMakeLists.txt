@@ -48,8 +48,6 @@ set(HEADER_FILES
     src/geometry/alignment.h
 
     src/menu/menu.h
-
-    src/scene/tip/itip.h
 )
 
 set(SOURCE_FILES
