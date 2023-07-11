@@ -36,34 +36,34 @@ void VerticalLayout::updateGeometry()
     {
         item->setOrigin(itemOrigin);
         item->setPos(_nextItemPos);
-        _nextItemPos.y += item->localRect().height() + spacing();
+        _nextItemPos.moveY(item->localRect().height() + spacing());
     }
 }
 
 void VerticalLayout::alignCenter()
 {
     _nextItemPos = rect().center();
-    _nextItemPos.y -= contentSize().height / 2;
+    _nextItemPos.moveY(-contentSize().height / 2);
 }
 
 void VerticalLayout::alignLeft()
 {
-    _nextItemPos.x -= rect().width() / 2;
+    _nextItemPos.moveX(-rect().width() / 2);
 }
 
 void VerticalLayout::alignRight()
 {
-    _nextItemPos.x += rect().width() / 2;
+    _nextItemPos.moveX(rect().width() / 2);
 }
 
 void VerticalLayout::alignTop()
 {
-    _nextItemPos.y -= (rect().height() / 2) - (contentSize().height / 2);
+    _nextItemPos.moveY((contentSize().height / 2) - (rect().height() / 2));
 }
 
 void VerticalLayout::alignBottom()
 {
-    _nextItemPos.y += (rect().height() / 2) - (contentSize().height / 2);
+    _nextItemPos.moveY((rect().height() / 2) - (contentSize().height / 2));
 }
 
 SizeF VerticalLayout::contentSize() const

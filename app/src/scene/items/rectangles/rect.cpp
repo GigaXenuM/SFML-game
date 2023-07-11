@@ -36,7 +36,7 @@ PointF Rect::center() const
 
 void Rect::setPos(PointF position)
 {
-    _drawableItem.setPosition({ position.x, position.y });
+    _drawableItem.setPosition({ position.x(), position.y() });
 }
 
 void Rect::setOrigin(Align origin)

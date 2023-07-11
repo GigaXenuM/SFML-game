@@ -41,7 +41,7 @@ PointF CollisionRect::center() const
 
 void CollisionRect::setPos(PointF position)
 {
-    _drawableItem.setPosition({ position.x, position.y });
+    _drawableItem.setPosition({ position.x(), position.y() });
 }
 
 void CollisionRect::setOrigin(Align origin)

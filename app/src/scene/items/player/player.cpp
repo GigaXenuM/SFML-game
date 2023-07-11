@@ -38,7 +38,7 @@ void Player::update(float deltatime)
 
 void Player::setPos(PointF position)
 {
-    _drawableItem.setPosition({ position.x, position.y });
+    _drawableItem.setPosition({ position.x(), position.y() });
 }
 
 void Player::setOrigin(Align origin)
@@ -51,7 +51,7 @@ void Player::handleCollision(RectF collisionRect)
     if (collisionRect.height() > collisionRect.width())
     {
         // From left
-        if (center().x > collisionRect.pos.x)
+        if (center().x() > collisionRect.pos.x())
             _drawableItem.move({ collisionRect.width(), .0f });
         // From right
         else
@@ -60,7 +60,7 @@ void Player::handleCollision(RectF collisionRect)
     else
     {
         // From top
-        if (center().y > collisionRect.pos.y)
+        if (center().y() > collisionRect.pos.y())
             _drawableItem.move({ .0f, collisionRect.height() });
         // From bottom
         else
@@ -73,7 +73,7 @@ PointF Player::center() const
     auto pos{ collisionRect().pos };
     float xOffset{ collisionRect().width() / 2 };
     float yOffset{ collisionRect().height() / 2 };
-    return { pos.x + xOffset, pos.y + yOffset };
+    return { pos.x() + xOffset, pos.y() + yOffset };
 }
 
 RectF Player::globalRect() const
@@ -129,22 +129,22 @@ void Player::handleMoving(float deltaTime)
 
     if (_keyStates[static_cast<size_t>(Key::A)])
     {
-        deltaPos.x -= 1;
+        deltaPos.moveX(-1);
         _animation.setRow(textureOffset + 2);
     }
     if (_keyStates[static_cast<size_t>(Key::D)])
     {
-        deltaPos.x += 1;
+        deltaPos.moveX(1);
         _animation.setRow(textureOffset + 3);
     }
     if (_keyStates[static_cast<size_t>(Key::W)])
     {
-        deltaPos.y -= 1;
+        deltaPos.moveY(-1);
         _animation.setRow(textureOffset + 1);
     }
     if (_keyStates[static_cast<size_t>(Key::S)])
     {
-        deltaPos.y += 1;
+        deltaPos.moveY(1);
         _animation.setRow(textureOffset + 0);
     }
 
@@ -154,12 +154,12 @@ void Player::handleMoving(float deltaTime)
         _animation.setColumn(1);
         return;
     }
-    else if (deltaPos.x != 0 && deltaPos.y != 0)
+    else if (deltaPos.x() != 0 && deltaPos.y() != 0)
     {
         speed /= sqrt(2);
     }
 
-    _drawableItem.move({ speed * deltaPos.x, speed * deltaPos.y });
+    _drawableItem.move({ speed * deltaPos.x(), speed * deltaPos.y() });
 
     _animation.update(deltaTime);
 }

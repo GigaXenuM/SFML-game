@@ -80,10 +80,10 @@ void TextButton::mousePressEvent(MousePressEvent *event)
         return;
 
     RectF rect{ globalRect() };
-    bool mouseHovered{ event->position().x > rect.pos.x
-                       && event->position().x < rect.pos.x + rect.width()
-                       && event->position().y > rect.pos.y
-                       && event->position().y < rect.pos.y + rect.height() };
+    bool mouseHovered{ event->position().x() > rect.pos.x()
+                       && event->position().x() < rect.pos.x() + rect.width()
+                       && event->position().y() > rect.pos.y()
+                       && event->position().y() < rect.pos.y() + rect.height() };
 
     if (mouseHovered)
     {

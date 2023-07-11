@@ -13,7 +13,7 @@
 #include "SFML/Graphics/RenderTarget.hpp"
 
 SceneView::SceneView(sf::RenderTarget *renderTarget, RectF rect, EventHandler *parent)
-    : sf::View{ { rect.pos.x, rect.pos.y }, { rect.size.width, rect.size.height } },
+    : sf::View{ { rect.pos.x(), rect.pos.y() }, { rect.size.width, rect.size.height } },
       _renderTarget{ renderTarget },
       _speedCentering{ 2.0f }
 {

@@ -19,11 +19,11 @@ void Animation::setColumn(size_t column)
 {
     if (column >= _columnCount)
     {
-        _texturePos.x = _columnCount - 1;
+        _texturePos.setX(_columnCount - 1);
         return;
     }
 
-    _texturePos.x = column;
+    _texturePos.setX(column);
     updateViewRect();
 }
 
@@ -31,11 +31,11 @@ void Animation::setRow(size_t row)
 {
     if (row >= _rowCount)
     {
-        _texturePos.y = _rowCount - 1;
+        _texturePos.setY(_rowCount - 1);
         return;
     }
 
-    _texturePos.y = row;
+    _texturePos.setY(row);
     updateViewRect();
 }
 
@@ -72,14 +72,14 @@ Animation::ViewRect Animation::viewRect() const
 
 void Animation::updateViewRect()
 {
-    _viewRect.pos = { _texturePos.x * _viewRect.width(), _texturePos.y * _viewRect.height() };
+    _viewRect.pos = { _texturePos.x() * _viewRect.width(), _texturePos.y() * _viewRect.height() };
 }
 
 void Animation::switchFrame()
 {
-    ++_texturePos.x;
-    if (_texturePos.x >= _columnCount)
-        _texturePos.x = 0;
+    _texturePos.moveX(1);
+    if (_texturePos.x() >= _columnCount)
+        _texturePos.setX(0);
 
     updateViewRect();
 }

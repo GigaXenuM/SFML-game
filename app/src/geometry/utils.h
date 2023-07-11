@@ -17,7 +17,7 @@ template <typename T> Point<T> toPoint(sf::Vector2<T> point)
 
 template <typename T> sf::Vector2<T> toSfmlPoint(Point<T> point)
 {
-    return sf::Vector2<T>{ point.x, point.y };
+    return sf::Vector2<T>{ point.x(), point.y() };
 }
 
 template <typename T> Size<T> toSize(sf::Vector2<T> size)

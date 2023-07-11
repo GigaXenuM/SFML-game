@@ -33,11 +33,11 @@ template <typename T> struct Rect
     }
     Point<T> topRight() const
     {
-        return { pos.x + width(), pos.y };
+        return { pos.x() + width(), pos.y() };
     }
     Point<T> bottomLeft() const
     {
-        return { pos.x, pos.y + height() };
+        return { pos.x(), pos.y() + height() };
     }
     Point<T> bottomRight() const
     {
@@ -45,12 +45,12 @@ template <typename T> struct Rect
     }
     Point<T> center() const
     {
-        return { pos.x + width() / 2, pos.y + height() / 2 };
+        return { pos.x() + width() / 2, pos.y() + height() / 2 };
     }
 
     Point<T> pointBy(Align origin) const
     {
-        Point<T> result{ pos.x + width() / 2, pos.y + height() / 2 };
+        Point<T> result{ pos.x() + width() / 2, pos.y() + height() / 2 };
 
         double halfWidth{ width() / 2 };
         double halfHeight{ height() / 2 };
@@ -58,27 +58,27 @@ template <typename T> struct Rect
         size_t value{ static_cast<size_t>(origin) };
 
         if (value & static_cast<size_t>(Align::Left))
-            result.x -= halfWidth;
+            result.moveX(-halfWidth);
         if (value & static_cast<size_t>(Align::Right))
-            result.x += halfWidth;
+            result.moveX(halfWidth);
         if (value & static_cast<size_t>(Align::Top))
-            result.y -= halfHeight;
+            result.moveY(-halfHeight);
         if (value & static_cast<size_t>(Align::Bottom))
-            result.y += halfHeight;
+            result.moveY(halfHeight);
 
         return result;
     }
 
     const Rect<T> &operator|(const Rect<T> &rect)
     {
-        return { { std::max(pos.x, rect.pos.x), std::max(pos.y, rect.pos.y) },
+        return { { std::max(pos.x(), rect.pos.x()), std::max(pos.y(), rect.pos.y()) },
                  { std::max(size.width, rect.size.width),
                    std::max(size.height, rect.size.height) } };
     }
 
     const Rect<T> &operator|=(const Rect<T> &rect)
     {
-        pos = { std::max(pos.x, rect.pos.x), std::max(pos.y, rect.pos.y) };
+        pos = { std::max(pos.x(), rect.pos.x()), std::max(pos.y(), rect.pos.y()) };
         size = { std::max(size.width, rect.size.width), std::max(size.height, rect.size.height) };
 
         return *this;
@@ -86,7 +86,7 @@ template <typename T> struct Rect
 
     operator Rect<float>() const
     {
-        return Rect<float>{ { static_cast<float>(pos.x), static_cast<float>(pos.y) },
+        return Rect<float>{ { static_cast<float>(pos.x()), static_cast<float>(pos.y()) },
                             { static_cast<float>(size.width), static_cast<float>(size.height) } };
     }
 
