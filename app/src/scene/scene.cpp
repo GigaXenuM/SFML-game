@@ -54,9 +54,11 @@ void Scene::detectCollision()
                      std::back_inserter(itemsToDetectCollision),
                      [detectable](auto item)
                      {
+                         const double minDistanceToHandleCollision{ 200.0 };
+
                          const bool condition{ Geometry::distance(detectable->collisionCenter(),
                                                                   item->collisionCenter())
-                                               < 200.0 };
+                                               < minDistanceToHandleCollision };
                          return condition;
                      });
 

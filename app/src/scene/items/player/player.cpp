@@ -10,13 +10,32 @@
 
 #include <iostream>
 
+namespace TextureProps
+{
+const size_t columnCount{ 4 };
+const size_t rowCount{ 8 };
+const float switchTime{ 0.25f };
+} // namespace TextureProps
+
+namespace SpriteProps
+{
+const sf::Vector2f scaling{ 4.f, 4.f };
+} // namespace SpriteProps
+
+namespace CollisionProps
+{
+const float horizontalOffset{ 10.f };
+const float vertitalOffset{ 5.f };
+} // namespace CollisionProps
+
 namespace Scene
 {
 Player::Player(std::shared_ptr<sf::Texture> texture, EventHandler *parent)
     : CollisionHandler{ parent },
       _texture{ std::move(texture) },
       _drawableItem{ *_texture },
-      _animation{ _texture, 4, 8, 0.25f },
+      _animation{ _texture, TextureProps::columnCount, TextureProps::rowCount,
+                  TextureProps::switchTime },
       _keyStates{ false }
 {
     setupSprite();
@@ -47,19 +66,19 @@ void Player::setOrigin(Align origin)
 
 void Player::handleCollision(const CollisionItem *item)
 {
-    Axes currentAxes{ axes() };
-    Axes itemAxes{ item->axes() };
+    const Axes currentAxes{ axes() };
+    const Axes itemAxes{ item->axes() };
 
     Axes axes{};
     axes.reserve(currentAxes.size() + itemAxes.size());
-    axes.insert(axes.end(), currentAxes.begin(), currentAxes.end());
-    axes.insert(axes.end(), itemAxes.begin(), itemAxes.end());
+    axes.insert(axes.cend(), currentAxes.cbegin(), currentAxes.cend());
+    axes.insert(axes.cend(), itemAxes.cbegin(), itemAxes.cend());
 
     VectorF offset{ 0, 0 };
 
     float minOverlap = std::numeric_limits<float>::infinity();
 
-    for (auto &axis : axes)
+    for (const VectorF &axis : axes)
     {
         const VectorF currentProjection = projectionOn(axis);
         const VectorF otherProjection = item->projectionOn(axis);
@@ -67,7 +86,7 @@ void Player::handleCollision(const CollisionItem *item)
         if (!currentProjection.overlap(otherProjection))
             return;
 
-        float overlap = currentProjection.overlapLength(otherProjection);
+        const float overlap = currentProjection.overlapLength(otherProjection);
 
         if (overlap < minOverlap)
         {
@@ -135,16 +154,18 @@ void Player::keyReleaseEvent(KeyReleaseEvent *event)
 void Player::setupSprite()
 {
     updateTexture();
-    _drawableItem.scale({ 4, 4 });
+    _drawableItem.scale(SpriteProps::scaling);
 }
 
 void Player::setupCollision()
 {
     RectF rect{ Geometry::toRect(_drawableItem.getGlobalBounds()) };
-    _collisionItem.setSize({ rect.height() / 2 - 10, rect.height() / 2 });
+    SizeF size{ rect.height() / 2 - CollisionProps::horizontalOffset, rect.height() / 2 };
+    _collisionItem.setSize({ size.width, size.height });
 
     RectF collision{ Geometry::toRect(_collisionItem.getGlobalBounds()) };
-    PointF collisionOrigin{ collision.pointBy(Align::Bottom) + PointF{ 0.0f, 5.0f } };
+    PointF collisionOrigin{ collision.pointBy(Align::Bottom)
+                            + PointF{ 0.0f, CollisionProps::vertitalOffset } };
     _collisionItem.setOrigin(collisionOrigin.data());
 
     updateCollision();
