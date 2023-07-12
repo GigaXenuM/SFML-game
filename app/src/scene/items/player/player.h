@@ -30,6 +30,7 @@ public:
     RectF localRect() const override;
     RectF collisionRect() const override;
     PointF center() const override;
+    PointF collisionCenter() const override;
     Vertices vertices() const override;
 
     void update(float deltatime) override;
@@ -43,10 +44,16 @@ protected:
     void keyReleaseEvent(KeyReleaseEvent *event) override;
 
 private:
+    void setupSprite();
+    void setupCollision();
+    void updateTexture();
     void handleMoving(float deltaTime);
+    void move(VectorF offset);
+    void updateCollision();
 
     std::shared_ptr<sf::Texture> _texture;
     sf::Sprite _drawableItem;
+    sf::RectangleShape _collisionItem;
 
     Animation _animation;
     std::array<bool, static_cast<size_t>(Keyboard::Key::MAX_SIZE)> _keyStates;

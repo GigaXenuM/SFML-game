@@ -184,7 +184,6 @@ void MainWindow::composeScene()
     _scene->addItem(item4);
 
     _scene->addItem(_player);
-    _scene->detectCollisionFor(_player);
 
     _sceneView->setCenterTarget(_player);
 }

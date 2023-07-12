@@ -19,8 +19,8 @@ Player::Player(std::shared_ptr<sf::Texture> texture, EventHandler *parent)
       _animation{ _texture, 4, 8, 0.25f },
       _keyStates{ false }
 {
-    _drawableItem.setTextureRect(sf::IntRect{ Geometry::toSfmlRect(_animation.viewRect()) });
-    _drawableItem.scale({ 4, 4 });
+    setupSprite();
+    setupCollision();
 }
 
 void Player::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
@@ -31,13 +31,13 @@ void Player::draw(sf::RenderTarget &target, const sf::RenderStates &states) cons
 void Player::update(float deltatime)
 {
     handleMoving(deltatime);
-
-    _drawableItem.setTextureRect(sf::IntRect{ Geometry::toSfmlRect(_animation.viewRect()) });
+    updateTexture();
 }
 
 void Player::setPos(PointF position)
 {
     _drawableItem.setPosition({ position.x(), position.y() });
+    updateCollision();
 }
 
 void Player::setOrigin(Align origin)
@@ -47,59 +47,60 @@ void Player::setOrigin(Align origin)
 
 void Player::handleCollision(const CollisionItem *item)
 {
-    Axes currentAxes = axes();
-    Axes axes2 = item->axes();
+    Axes currentAxes{ axes() };
+    Axes itemAxes{ item->axes() };
 
-    VectorF mtv{ 0, 0 };
+    Axes axes{};
+    axes.reserve(currentAxes.size() + itemAxes.size());
+    axes.insert(axes.end(), currentAxes.begin(), currentAxes.end());
+    axes.insert(axes.end(), itemAxes.begin(), itemAxes.end());
 
-    std::transform(axes2.cbegin(), axes2.cend(), std::back_inserter(currentAxes),
-                   [](const VectorF vec) { return vec; });
+    VectorF offset{ 0, 0 };
 
-    // we need to find the minimal overlap and axis on which it happens
     float minOverlap = std::numeric_limits<float>::infinity();
 
-    for (auto &axis : currentAxes)
+    for (auto &axis : axes)
     {
-        VectorF proj1 = projectionOn(axis);
-        VectorF proj2 = item->projectionOn(axis);
+        const VectorF currentProjection = projectionOn(axis);
+        const VectorF otherProjection = item->projectionOn(axis);
 
-        if (!proj1.overlap(proj2))
+        if (!currentProjection.overlap(otherProjection))
             return;
 
-        float overlap = proj1.overlapLength(proj2);
+        float overlap = currentProjection.overlapLength(otherProjection);
 
         if (overlap < minOverlap)
         {
             minOverlap = overlap;
-            mtv = axis * minOverlap;
+            offset = axis * minOverlap;
         }
     }
 
-    VectorF beetweenCenters{ center() - item->center() };
-    bool notPointingInTheSameDirection = beetweenCenters.dot(mtv) < 0;
-    if (notPointingInTheSameDirection)
-        mtv = -mtv;
+    const VectorF beetweenCenters{ collisionCenter() - item->collisionCenter() };
+    const bool needReflect = beetweenCenters.dot(offset) < 0;
+    if (needReflect)
+        offset = -offset;
 
-    _drawableItem.move({ mtv.x(), mtv.y() });
+    move(offset);
 }
 
 PointF Player::center() const
 {
-    auto pos{ collisionRect().pos };
-    float xOffset{ collisionRect().width() / 2 };
-    float yOffset{ collisionRect().height() / 2 };
-    return { pos.x() + xOffset, pos.y() + yOffset };
+    return globalRect().center();
+}
+
+PointF Player::collisionCenter() const
+{
+    const sf::Transform &transform = _collisionItem.getTransform();
+    return Geometry::toPoint(transform.transformPoint(_collisionItem.getGeometricCenter()));
 }
 
 Vertices Player::vertices() const
 {
-    sf::RectangleShape shape{ _drawableItem.getLocalBounds().getSize() };
-    shape.setPosition(_drawableItem.getPosition());
-
     Vertices vertices;
-    const sf::Transform &transform = _drawableItem.getTransform();
-    for (std::size_t i = 0u; i < shape.getPointCount(); ++i)
-        vertices.push_back(Geometry::toPoint(transform.transformPoint(shape.getPoint(i))));
+    const sf::Transform &transform = _collisionItem.getTransform();
+    for (std::size_t i = 0u; i < _collisionItem.getPointCount(); ++i)
+        vertices.push_back(Geometry::toPoint(transform.transformPoint(_collisionItem.getPoint(i))));
 
     return vertices;
 }
@@ -116,12 +117,7 @@ RectF Player::localRect() const
 
 RectF Player::collisionRect() const
 {
-    float widthOffset{ 6.0f };
-    float width{ _drawableItem.getGlobalBounds().width - widthOffset };
-    float height{ _drawableItem.getGlobalBounds().height / 2 };
-    return RectF{ { _drawableItem.getGlobalBounds().left + widthOffset / 2,
-                    _drawableItem.getGlobalBounds().top + height },
-                  { width, height } };
+    return Geometry::toRect(_collisionItem.getGlobalBounds());
 }
 
 void Player::keyPressEvent(KeyPressEvent *event)
@@ -134,6 +130,29 @@ void Player::keyReleaseEvent(KeyReleaseEvent *event)
 {
     _keyStates[static_cast<size_t>(event->key())] = false;
     _keyboardMode = event->mode();
+}
+
+void Player::setupSprite()
+{
+    updateTexture();
+    _drawableItem.scale({ 4, 4 });
+}
+
+void Player::setupCollision()
+{
+    RectF rect{ Geometry::toRect(_drawableItem.getGlobalBounds()) };
+    _collisionItem.setSize({ rect.height() / 2 - 10, rect.height() / 2 });
+
+    RectF collision{ Geometry::toRect(_collisionItem.getGlobalBounds()) };
+    PointF collisionOrigin{ collision.pointBy(Align::Bottom) + PointF{ 0.0f, 5.0f } };
+    _collisionItem.setOrigin(collisionOrigin.data());
+
+    updateCollision();
+}
+
+void Player::updateTexture()
+{
+    _drawableItem.setTextureRect(sf::IntRect{ Geometry::toSfmlRect(_animation.viewRect()) });
 }
 
 void Player::handleMoving(float deltaTime)
@@ -187,8 +206,19 @@ void Player::handleMoving(float deltaTime)
         speed /= sqrt(2);
     }
 
-    _drawableItem.move({ speed * deltaPos.x(), speed * deltaPos.y() });
+    move(deltaPos * speed);
 
     _animation.update(deltaTime);
+}
+
+void Player::move(VectorF offset)
+{
+    _drawableItem.move(offset.data());
+    updateCollision();
+}
+
+void Player::updateCollision()
+{
+    _collisionItem.setPosition(globalRect().pointBy(Align::Bottom).data());
 }
 } // namespace Scene

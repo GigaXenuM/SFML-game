@@ -38,6 +38,11 @@ PointF CollisionRect::center() const
     return Geometry::toPoint(transform.transformPoint(_drawableItem.getGeometricCenter()));
 }
 
+PointF CollisionRect::collisionCenter() const
+{
+    return center();
+}
+
 Vertices CollisionRect::vertices() const
 {
     Vertices vertices;

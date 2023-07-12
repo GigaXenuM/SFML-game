@@ -14,6 +14,7 @@ public:
 
     virtual RectF collisionRect() const = 0;
     virtual Vertices vertices() const = 0;
+    virtual PointF collisionCenter() const = 0;
 
     VectorF projectionOn(VectorF axis) const;
     Axes axes() const;

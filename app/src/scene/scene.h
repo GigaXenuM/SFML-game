@@ -33,8 +33,6 @@ public:
 
     void addItem(Item *item);
 
-    void detectCollisionFor(CollisionHandler *item);
-
 private:
     void detectCollision();
     void handleCollision(CollisionHandler *collisionHandler,

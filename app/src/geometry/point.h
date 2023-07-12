@@ -34,6 +34,8 @@ template <typename T> struct Point
     bool overlap(const Point &other) const;
     T overlapLength(const Point &other) const;
 
+    sf::Vector2<T> data() const;
+
 private:
     sf::Vector2<T> _data;
 };
@@ -153,4 +155,9 @@ template <typename T> T Point<T>::overlapLength(const Point &other) const
         return 0.f;
 
     return std::min(y(), other.y()) - std::max(x(), other.x());
+}
+
+template <typename T> sf::Vector2<T> Point<T>::data() const
+{
+    return _data;
 }

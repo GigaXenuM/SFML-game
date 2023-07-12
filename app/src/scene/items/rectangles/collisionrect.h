@@ -18,6 +18,7 @@ public:
     RectF localRect() const override;
     RectF collisionRect() const override;
     PointF center() const override;
+    PointF collisionCenter() const override;
     Vertices vertices() const override;
 
     void setPos(PointF position) override;
