@@ -55,8 +55,8 @@ RectF TextButton::localRect() const
 
 PointF TextButton::center() const
 {
-    sf::FloatRect bound{ _shape.getGlobalBounds() };
-    return { bound.left + bound.width / 2.f, bound.top + bound.height / 2.f };
+    const sf::Transform &transform = _shape.getTransform();
+    return Geometry::toPoint(transform.transformPoint(_shape.getGeometricCenter()));
 }
 
 void TextButton::setTextColor(sf::Color color)

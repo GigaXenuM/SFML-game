@@ -4,8 +4,6 @@
 
 #include "visitors/ivisitor.h"
 
-#include "geometry/rect.h"
-
 namespace Scene
 {
 
@@ -17,7 +15,7 @@ public:
     }
     virtual ~CollisionHandler() = default;
 
-    virtual void handleCollision(RectF collisionRect) = 0;
+    virtual void handleCollision(const CollisionItem *item) = 0;
 
     void accept(IVisitor *visitor) override
     {

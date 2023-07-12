@@ -30,12 +30,13 @@ public:
     RectF localRect() const override;
     RectF collisionRect() const override;
     PointF center() const override;
+    Vertices vertices() const override;
 
     void update(float deltatime) override;
     void setPos(PointF position) override;
     void setOrigin(Align origin) override;
 
-    void handleCollision(RectF collisionRect) override;
+    void handleCollision(const CollisionItem *item) override;
 
 protected:
     void keyPressEvent(KeyPressEvent *event) override;

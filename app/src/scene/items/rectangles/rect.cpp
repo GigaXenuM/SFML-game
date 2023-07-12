@@ -28,10 +28,8 @@ RectF Rect::localRect() const
 
 PointF Rect::center() const
 {
-    auto sfmlPos{ _drawableItem.getPosition() };
-    float xOffset{ _drawableItem.getSize().x / 2 };
-    float yOffset{ _drawableItem.getSize().y / 2 };
-    return { sfmlPos.x + xOffset, sfmlPos.y + yOffset };
+    const sf::Transform &transform = _drawableItem.getTransform();
+    return Geometry::toPoint(transform.transformPoint(_drawableItem.getGeometricCenter()));
 }
 
 void Rect::setPos(PointF position)

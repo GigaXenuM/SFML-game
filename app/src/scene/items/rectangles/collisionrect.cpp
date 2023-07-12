@@ -9,6 +9,7 @@ namespace Scene
 CollisionRect::CollisionRect() : CollisionItem{ nullptr }, _drawableItem{ { 50.0f, 50.0f } }
 {
     _drawableItem.setFillColor(sf::Color::Red);
+    _drawableItem.rotate(sf::degrees(45.0f));
 }
 
 void CollisionRect::draw(sf::RenderTarget &target, const sf::RenderStates &states) const
@@ -33,10 +34,18 @@ RectF CollisionRect::collisionRect() const
 
 PointF CollisionRect::center() const
 {
-    auto sfmlPos{ _drawableItem.getPosition() };
-    float xOffset{ _drawableItem.getSize().x / 2 };
-    float yOffset{ _drawableItem.getSize().y / 2 };
-    return { sfmlPos.x + xOffset, sfmlPos.y + yOffset };
+    const sf::Transform &transform = _drawableItem.getTransform();
+    return Geometry::toPoint(transform.transformPoint(_drawableItem.getGeometricCenter()));
+}
+
+Vertices CollisionRect::vertices() const
+{
+    Vertices vertices;
+    const sf::Transform &transform = _drawableItem.getTransform();
+    for (std::size_t i = 0u; i < _drawableItem.getPointCount(); ++i)
+        vertices.push_back(Geometry::toPoint(transform.transformPoint(_drawableItem.getPoint(i))));
+
+    return vertices;
 }
 
 void CollisionRect::setPos(PointF position)

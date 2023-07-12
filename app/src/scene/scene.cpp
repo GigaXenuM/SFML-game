@@ -75,9 +75,7 @@ void Scene::handleCollision(CollisionHandler *collisionHandler,
 {
     for (const auto &collisionItem : collisionItems)
     {
-        auto collisionRect{ collisionHandler->intersects(*collisionItem) };
-        if (collisionRect.has_value())
-            collisionHandler->handleCollision(collisionRect.value());
+        collisionHandler->handleCollision(collisionItem);
     }
 }
 } // namespace Scene

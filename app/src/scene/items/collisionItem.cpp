@@ -1,24 +1,43 @@
 #include "collisionitem.h"
 
-#include "utils.h"
-
 #include "visitors/ivisitor.h"
-
-#include "SFML/Graphics/Rect.hpp"
 
 namespace Scene
 {
 
-std::optional<RectF> CollisionItem::intersects(const CollisionItem &item) const
+VectorF CollisionItem::projectionOn(VectorF axis) const
 {
-    std::optional<sf::FloatRect> sfmlRect{ Geometry::toSfmlRect(collisionRect())
-                                               .findIntersection(
-                                                   Geometry::toSfmlRect(item.collisionRect())) };
+    float min = std::numeric_limits<float>::infinity();
+    float max = -std::numeric_limits<float>::infinity();
+    for (auto &vertex : vertices())
+    {
+        float projection = vertex.dot(axis);
+        min = std::min(projection, min);
+        max = std::max(projection, max);
+    }
+    return { min, max };
+}
 
-    if (sfmlRect.has_value())
-        return Geometry::toRect(sfmlRect.value());
+Axes CollisionItem::axes() const
+{
+    Vertices itemVertices{ vertices() };
 
-    return std::nullopt;
+    const size_t firstVertexIndex{ 0 };
+    const size_t latestVertexIndex{ itemVertices.size() - 1 };
+
+    Axes axes;
+    for (size_t index = 0; index < itemVertices.size(); ++index)
+    {
+        const size_t nextIndex{ index + 1 };
+
+        const PointF start{ itemVertices[index] };
+        const PointF end{ index < latestVertexIndex ? itemVertices[nextIndex]
+                                                    : itemVertices[firstVertexIndex] };
+        const VectorF side{ end - start };
+        axes.push_back(side.normal());
+    }
+
+    return axes;
 }
 
 void CollisionItem::accept(IVisitor *visitor)

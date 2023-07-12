@@ -13,8 +13,10 @@ public:
     }
 
     virtual RectF collisionRect() const = 0;
+    virtual Vertices vertices() const = 0;
 
-    virtual std::optional<RectF> intersects(const CollisionItem &item) const;
+    VectorF projectionOn(VectorF axis) const;
+    Axes axes() const;
 
     void accept(IVisitor *visitor) override;
 };

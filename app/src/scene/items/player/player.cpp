@@ -7,7 +7,6 @@
 #include "geometry/utils.h"
 
 #include "SFML/Graphics/RenderTarget.hpp"
-#include "SFML/System/Time.hpp"
 
 #include <iostream>
 
@@ -46,26 +45,42 @@ void Player::setOrigin(Align origin)
     _drawableItem.setOrigin(Geometry::toSfmlPoint(localRect().pointBy(origin)));
 }
 
-void Player::handleCollision(RectF collisionRect)
+void Player::handleCollision(const CollisionItem *item)
 {
-    if (collisionRect.height() > collisionRect.width())
+    Axes currentAxes = axes();
+    Axes axes2 = item->axes();
+
+    VectorF mtv{ 0, 0 };
+
+    std::transform(axes2.cbegin(), axes2.cend(), std::back_inserter(currentAxes),
+                   [](const VectorF vec) { return vec; });
+
+    // we need to find the minimal overlap and axis on which it happens
+    float minOverlap = std::numeric_limits<float>::infinity();
+
+    for (auto &axis : currentAxes)
     {
-        // From left
-        if (center().x() > collisionRect.pos.x())
-            _drawableItem.move({ collisionRect.width(), .0f });
-        // From right
-        else
-            _drawableItem.move({ -collisionRect.width(), .0f });
+        VectorF proj1 = projectionOn(axis);
+        VectorF proj2 = item->projectionOn(axis);
+
+        if (!proj1.overlap(proj2))
+            return;
+
+        float overlap = proj1.overlapLength(proj2);
+
+        if (overlap < minOverlap)
+        {
+            minOverlap = overlap;
+            mtv = axis * minOverlap;
+        }
     }
-    else
-    {
-        // From top
-        if (center().y() > collisionRect.pos.y())
-            _drawableItem.move({ .0f, collisionRect.height() });
-        // From bottom
-        else
-            _drawableItem.move({ .0f, -collisionRect.height() });
-    }
+
+    VectorF beetweenCenters{ center() - item->center() };
+    bool notPointingInTheSameDirection = beetweenCenters.dot(mtv) < 0;
+    if (notPointingInTheSameDirection)
+        mtv = -mtv;
+
+    _drawableItem.move({ mtv.x(), mtv.y() });
 }
 
 PointF Player::center() const
@@ -74,6 +89,19 @@ PointF Player::center() const
     float xOffset{ collisionRect().width() / 2 };
     float yOffset{ collisionRect().height() / 2 };
     return { pos.x() + xOffset, pos.y() + yOffset };
+}
+
+Vertices Player::vertices() const
+{
+    sf::RectangleShape shape{ _drawableItem.getLocalBounds().getSize() };
+    shape.setPosition(_drawableItem.getPosition());
+
+    Vertices vertices;
+    const sf::Transform &transform = _drawableItem.getTransform();
+    for (std::size_t i = 0u; i < shape.getPointCount(); ++i)
+        vertices.push_back(Geometry::toPoint(transform.transformPoint(shape.getPoint(i))));
+
+    return vertices;
 }
 
 RectF Player::globalRect() const
