@@ -45,11 +45,6 @@ void Scene::addItem(Item *item)
     _itemsToDrawing.push_back(item);
 }
 
-void Scene::detectCollisionFor(CollisionHandler *item)
-{
-    _itemContext->collisionHandlers.push_back(item);
-}
-
 void Scene::detectCollision()
 {
     for (const auto &detectable : _itemContext->collisionHandlers)
@@ -59,11 +54,12 @@ void Scene::detectCollision()
                      std::back_inserter(itemsToDetectCollision),
                      [detectable](auto item)
                      {
-                         const bool condition1{ item != detectable };
-                         const bool condition2{
-                             Geometry::distance(detectable->center(), item->center()) < 200.0
-                         };
-                         return condition1 && condition2;
+                         const double minDistanceToHandleCollision{ 200.0 };
+
+                         const bool condition{ Geometry::distance(detectable->collisionCenter(),
+                                                                  item->collisionCenter())
+                                               < minDistanceToHandleCollision };
+                         return condition;
                      });
 
         handleCollision(detectable, itemsToDetectCollision);
@@ -75,9 +71,7 @@ void Scene::handleCollision(CollisionHandler *collisionHandler,
 {
     for (const auto &collisionItem : collisionItems)
     {
-        auto collisionRect{ collisionHandler->intersects(*collisionItem) };
-        if (collisionRect.has_value())
-            collisionHandler->handleCollision(collisionRect.value());
+        collisionHandler->handleCollision(collisionItem);
     }
 }
 } // namespace Scene

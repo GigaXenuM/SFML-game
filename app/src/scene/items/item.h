@@ -10,6 +10,9 @@
 
 enum class Align;
 
+using Vertices = std::vector<PointF>;
+using Axes = std::vector<PointF>;
+
 namespace Scene
 {
 class IVisitor;
